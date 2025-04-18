@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract LockBridge {
+    event TokensLocked(address indexed sender, uint256 amount, string cosmosReceiver);
+
+    mapping(address => uint256) public lockedTokens;
+
+    function lockTokens(string memory cosmosReceiver) public payable {
+        require(msg.value > 0, "Must send ETH to lock");
+
+        lockedTokens[msg.sender] += msg.value;
+
+        emit TokensLocked(msg.sender, msg.value, cosmosReceiver);
+    }
+
+    function getLockedBalance(address user) public view returns (uint256) {
+        return lockedTokens[user];
+    }
+}
